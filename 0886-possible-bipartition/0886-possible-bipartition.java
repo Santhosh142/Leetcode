@@ -16,11 +16,24 @@ class Solution {
         boolean res = true;
         for(int i = 1; i <= n; i++) {
             if(vis[i] == -1) {
-                boolean ans = bfs(i, vis, adj);
+                // boolean ans = bfs(i, vis, adj);
+                boolean ans = dfs(i, vis, adj);
                 res &= ans;
             }
         }
         return res;
+    }
+    
+    public boolean dfs(int node, int[] color, ArrayList<ArrayList<Integer>> adj) {
+        if(color[node] == -1) color[node] = 1;
+        
+        for(int it : adj.get(node)) {
+            if(color[it] == -1) {
+                color[it] = 1 - color[node];
+                if(dfs(it, color, adj) == false) return false;;
+            } else if(color[it] == color[node]) return false;
+        }
+        return true;
     }
     
     public boolean bfs(int node, int[] vis, ArrayList<ArrayList<Integer>> adj) {
