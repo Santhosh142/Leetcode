@@ -8,36 +8,26 @@ class Solution {
             adj.get(src).add(dest);
             adj.get(dest).add(src);
         }
-        
-        HashMap<Character, Integer> map = new HashMap<>();
         char[] label = labels.toCharArray();
         int[] res = new int[n];
-        
-        HashMap<Character, Integer> map1 = dfs(adj, label, res, 0, -1);
+        dfs(adj, label, res, 0, -1);
         return res;
         
     }
     public HashMap<Character, Integer> dfs(ArrayList<ArrayList<Integer>> adj, char[] label, int[] res, int node, int par) {
         HashMap<Character, Integer> map = new HashMap<>();
-        // if(par == node) return map;
         for(int it : adj.get(node)) {
             if(it == par) 
                 continue;
             HashMap<Character, Integer> map1 = dfs(adj, label, res, it, node);
             
             for(Character key : map1.keySet()) {
-                if(!map.containsKey(key)) {
-                    map.put(key, map1.get(key));
-                }
-                else {
-                    int val = map.get(key);
-                    map.put(key, val + map1.get(key));
-                    
-                }
+                map.put(key, map.getOrDefault(key, 0) + map1.get(key));
             }
         }
-        map.put(label[node], map.getOrDefault(label[node], 0) + 1);
-        res[node] = map.get(label[node]);
+        char ch = label[node];
+        map.put(ch, map.getOrDefault(ch, 0) + 1);
+        res[node] = map.get(ch);
         return map;
     }
 }
