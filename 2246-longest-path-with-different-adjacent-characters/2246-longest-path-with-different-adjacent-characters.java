@@ -1,0 +1,39 @@
+class Solution {
+    int n;
+    int maxLength = 1;
+    int[] parent;
+    public int longestPath(int[] parent, String s) {
+        n = parent.length;
+        this.parent = parent;
+        ArrayList<Integer>[] graph = new ArrayList[n];
+        for(int i=0;i<n;i++){
+            graph[i] = new ArrayList();
+        }
+        for(int i=0;i<n;i++){
+            if(parent[i] == -1) continue;
+            graph[parent[i]].add(i);
+        }
+        dfs(graph,0,s.toCharArray(),new boolean[n]);
+        return maxLength;
+    }
+
+    int dfs(ArrayList<Integer>[] graph, int i,char[] s, boolean[] visited){
+        visited[i] = true;
+        if(graph[i].size()==0) return 1;
+        int max = 0,second = 0;
+        for(int v : graph[i]){
+            if(!visited[v]){
+               int len = dfs(graph,v,s,visited);
+               if(s[v] == s[i]) continue;
+               if(len>max){
+                   second = max;
+                   max = len;
+               }
+               else if(len>second)
+               second = len;
+            }
+        }
+        maxLength = Math.max(maxLength,max+second+1);
+        return max+1;
+    }
+}
