@@ -11,33 +11,35 @@
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) 
     {
-        ArrayList<Integer> alist = new ArrayList<>();
-        for(ListNode newhead : lists)
-        {
-            while(newhead != null)
-            {
-                alist.add(newhead.val);
-                newhead=newhead.next;
+        if(lists.length == 0) return null;
+        return mergeSort(lists, 0, lists.length - 1);
+    }
+    
+    public ListNode mergeSort(ListNode[] lists, int start, int end) {
+        if(start == end) return lists[start];
+        if(start + 1 == end) return merge(lists[start], lists[end]);
+        
+        int mid = start + (end - start) / 2;
+        ListNode left = mergeSort(lists, start, mid);
+        ListNode right = mergeSort(lists, mid + 1, end);
+        
+        return merge(left, right);
+    }
+    
+    public ListNode merge(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(-1);
+        ListNode curr = dummy;
+        while(l1 != null && l2 != null) {
+            if(l1.val <= l2.val) {
+                curr.next = l1;
+                l1 = l1.next;
+            } else {
+                curr.next = l2;
+                l2 = l2.next;
             }
+            curr = curr.next;
         }
-        Collections.sort(alist);
-        int sz = alist.size();
-        ListNode head = null;
-        ListNode temp = head;
-        for(int i=0;i<sz;i++)
-        {
-            ListNode newNode = new ListNode(alist.get(i));
-            if(head == null)
-            {
-                head = newNode;
-                temp = newNode;
-            }
-            else
-            {
-                temp.next = newNode;
-                temp = newNode;
-            }
-        }
-        return head;
+        curr.next = (l1 != null) ? l1 : l2;
+        return dummy.next;
     }
 }
