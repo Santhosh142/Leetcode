@@ -1,14 +1,15 @@
 class Solution {
     public int climbStairs(int n) {
-        if(n ==  1) return 1;
-        if(n == 2) return 2;
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, 0);
+        return memoize(dp, n);
+    }
+    
+    public int memoize(int[] dp, int n) {
+        if(n == 0 || n == 1) return 1;
         
-        int prev = 1, curr = 2;
-        while(n-- > 2) {
-            int sum = prev + curr;
-            prev = curr;
-            curr = sum;
-        }
-        return curr;
+        if(dp[n] != 0) return dp[n];
+        
+        return dp[n] = memoize(dp, n - 1) + memoize(dp, n - 2);
     }
 }
